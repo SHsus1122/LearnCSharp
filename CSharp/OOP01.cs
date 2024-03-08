@@ -18,6 +18,27 @@ namespace CSharp
         public int hp;
         public int attack;
 
+        // 생성자
+        public Knight()
+        {
+            hp = 100;
+            attack = 10;
+            Console.WriteLine("생성자 호출!");
+        }
+
+        public Knight(int hp) : this()
+        {
+            this.hp = hp;
+            Console.WriteLine("Int 생성자 호출!");
+        }
+
+        public Knight(int hp, int attack) : this(hp)
+        {
+            this.hp = hp;
+            this.attack = attack;
+            Console.WriteLine("Int, attack 생성자 호출!");
+        }
+
         // 이동 기능 함수
         public void Move()
         {
@@ -40,50 +61,13 @@ namespace CSharp
         }
     }
 
-    // Struct 의 경우 값을 복사해서 넘기게 됩니다.
-    struct Mage
-    {
-        public int hp;
-        public int attack;
-    }
-
     internal class OOP01
     {
-        static void KillMage(Mage mage)
-        {
-            mage.hp = 0;
-        }
-
-        static void KillKnight(Knight knight)
-        {
-            knight.hp = 0;
-        }
-
         static void Main(string[] args)
         {
-            Mage mage;
-            mage.hp = 100;
-            mage.attack = 50;
-            KillMage(mage);
-
-            Mage mage2;
-            mage2.hp = 0;
-
             // 새로운 객체 생성
-            Knight knight = new Knight();
-
-            // 속성에 접근해서 값을 지정
-            knight.hp = 100;
-            knight.attack = 10;
-
-            // 속성에 접근해서 기능을 사용
-            knight.Move();
-            knight.Attack();
-            KillKnight(knight);
-
-            // Deep Copy 방식인 Clone 함수를 이용한 새로운 객체 생성
-            Knight knight2 = knight.Clone();
-            knight2.hp = 50;
+            //Knight knight = new Knight();
+            Knight knight2 = new Knight(10);
         }
     }
 }
