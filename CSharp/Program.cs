@@ -213,7 +213,7 @@ namespace CSharp // Note: actual namespace depends on the project name.
 
 
         // ========================================== [ 메인 함수 ]
-        static void Main(string[] args)
+        static void Main2(string[] args)
         {
             while (true)
             {
