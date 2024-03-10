@@ -14,29 +14,32 @@ namespace CSharp
     // Class 의 경우 참조를 해서 값을 넘깁니다.
     class Knight
     {
+        // Field(필드)
         // 클래스 외부에서도 사용해주기 위해서 접근제어자 지정
+        static public int counter;  // 오로지 1 개만 존재합니다.
+
+        public int id;              // 플레이어 고유 아이디
         public int hp;
         public int attack;
+
+        // Knight 생성용 정적 함수
+        static public Knight CreateKnight()
+        {
+            Knight Knight = new Knight();
+            Knight.hp = 100;
+            Knight.attack = 10;
+            return Knight;
+        }
 
         // 생성자
         public Knight()
         {
+            id = counter;
+            counter++;
+
             hp = 100;
             attack = 10;
             Console.WriteLine("생성자 호출!");
-        }
-
-        public Knight(int hp) : this()
-        {
-            this.hp = hp;
-            Console.WriteLine("Int 생성자 호출!");
-        }
-
-        public Knight(int hp, int attack) : this(hp)
-        {
-            this.hp = hp;
-            this.attack = attack;
-            Console.WriteLine("Int, attack 생성자 호출!");
         }
 
         // 이동 기능 함수
@@ -65,9 +68,11 @@ namespace CSharp
     {
         static void Main(string[] args)
         {
-            // 새로운 객체 생성
-            //Knight knight = new Knight();
-            Knight knight2 = new Knight(10);
+            // 새로운 객체 생성(기존 방법)
+            Knight knight = new Knight();
+
+            // 새로운 객체 생성(static 활용)
+            Knight knight2 = Knight.CreateKnight();
         }
     }
 }
