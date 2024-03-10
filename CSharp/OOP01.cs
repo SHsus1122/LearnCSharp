@@ -10,91 +10,45 @@ namespace CSharp
     // 객체지향(OOP, Object Oriented Programming)
     // - 은닉성, 상속성, 다형성
 
-    class Player    // 부모 클래스 혹인 기반 클래스
+    // 자동차를 탄다고 가정 합니다.
+    // 핸들, 폐달, 차문 같은 외부로 노출되는 기능이 있고
+    // 전기장치, 엔진 같은 외부로 노출되지 않는 기능이 있다고 합니다.
+    //  여기서 은닉성은 위의 기능들 중 노출되면 않되는 중요 기능들을 숨기는 것들을 말합니다.
+
+    class Knight
     {
-        static public int counter;  // 오로지 1 개만 존재합니다.
-        public int id;              // 플레이어 고유 아이디
-        public int hp;
-        public int attack;
-
-        public Player()
-        {
-            Console.WriteLine("Player 생성자 호출!");
-        }
-
-        public Player(int hp)
+        // 접근 제어자(제한 레벨) public, protected, private
+        //  - pulic     : 모든 곳에서 사용 가능
+        //  - private   : 본인 클래스 내에서만 사용 가능
+        //  - protected : 자식에서만 접근 가능
+        private int hp;
+        public int mp;
+        protected int ap;
+        
+        // 외부에서 접근 불가
+        public void SetHp(int hp)
         {
             this.hp = hp;
-            Console.WriteLine("Player [HP] 생성자 호출!");
         }
 
-        public Player(int hp, int attack)
+        public int GetHp()
         {
-            this.hp = hp;
-            this.attack = attack;
-            Console.WriteLine("Player [HP, Attack] 생성자 호출!");
+            return this.hp;
         }
     }
 
-    class Mage : Player // 자식 클래스 혹은 파생 클래스
+    class SuperKnight : Knight
     {
-        
-    }
-
-    class Archer : Player
-    {
-        
-    }
-
-    // Knight - 속성 : hp, attack / 기능 : Move, Attack, Die
-    // 속성과 기능을 채워넣기
-    // Class 의 경우 참조를 해서 값을 넘깁니다.
-    class Knight : Player
-    {
-        int myHp;
-        // 생성자
-        public Knight() : base(100, 10) // 부모의 멤버 선택 키워드 "base"
+        // private 레벨인 hp 는 에러 발생
+        public void SetMp()
         {
-            id = counter;
-            counter++;
-
-            hp = 100;
-            attack = 10;
-
-            this.myHp = 10; // 자식의 멤버 변수 접근
-            base.hp = hp;   // 부모의 멤버 변수 접근
-
-            Console.WriteLine("Knight 생성자 호출!");
+            this.hp = 150;
         }
 
-        // Knight 생성용 정적 함수
-        static public Knight CreateKnight()
+        // protected 레벨인 ap 는 정상 작동
+        public void SetAp()
         {
-            Knight Knight = new Knight();
-            Knight.hp = 100;
-            Knight.attack = 10;
-            return Knight;
-        }
-
-        // 이동 기능 함수
-        public void Move()
-        {
-            Console.WriteLine("Knight Move");
-        }
-
-        // 공격 기능 함수
-        public void Attack()
-        {
-            Console.WriteLine("Knight Attack");
-        }
-
-        // Deep Copy 함수
-        public Knight Clone()
-        {
-            Knight knight = new Knight();
-            knight.hp = hp;
-            knight.attack = attack;
-            return knight;
+            this.ap = 50;
         }
     }
 
@@ -102,11 +56,22 @@ namespace CSharp
     {
         static void Main(string[] args)
         {
-            // 새로운 객체 생성(기존 방법)
             Knight knight = new Knight();
 
-            // 새로운 객체 생성(static 활용)
-            Knight knight2 = Knight.CreateKnight();
+            // private 레벨인 hp 와 protected 인 ap 는 직접 접근 불가능, 에러 발생
+            knight.hp = 100;
+            knight.ap = 100;
+            // 하지만, public 의 경우 이렇게 직접 접근이 가능
+            knight.mp = 100;
+
+            // 하지만 아래처럼 Getter, Setter 를 활용한 내부 함수로는 가능
+            knight.SetHp(100);                  // 100 으로 설정
+            Console.WriteLine(knight.GetHp());  // 결과 : 100
+
+            SuperKnight superKnight = new SuperKnight();
+            // protected 레벨인 ap 는 자식에서 접근 가능하나 이는 어디까지나 상속받은 클래스 내에서 가능
+            // 이렇게 직접 접근은 불가능, 그래서 Getter, Setter 라는 함수(개념)가 필요합니다.
+            superKnight.ap = 100;
         }
     }
 }
