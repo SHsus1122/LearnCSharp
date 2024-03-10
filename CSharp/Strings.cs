@@ -11,7 +11,7 @@ namespace CSharp
 {
     internal class Strings
     {
-        static void Main(string[] args)
+        static void Main3(string[] args)
         {
             string name = "Harry Portter";
 
