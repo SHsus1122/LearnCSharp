@@ -31,7 +31,7 @@ namespace CSharp
     {
         public Slime() : base(MonsterType.Slime)
         {
-            SetInfo(10, 1);
+            SetInfo(10, 10);
         }
     }
 
@@ -39,7 +39,7 @@ namespace CSharp
     {
         public Orc() : base(MonsterType.Orc)
         {
-            SetInfo(20, 2);
+            SetInfo(20, 15);
         }
     }
 
@@ -47,7 +47,7 @@ namespace CSharp
     {
         public Skeleton() : base(MonsterType.Skeleton)
         {
-            SetInfo(15, 5);
+            SetInfo(15, 25);
         }
     }
 }
