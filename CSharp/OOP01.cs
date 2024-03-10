@@ -14,16 +14,42 @@ namespace CSharp
     {
         protected int hp;
         protected int attack;
+
+        public virtual void Move()
+        {
+            Console.WriteLine("Player 이동");
+        }
     }
 
+    // 오버로딩 - 함수 이름의 재사용(이름은 재사용하지만, 인자는 다름)
+    // 오버라이딩 - 다형성 이용 여기서 처럼 virtual 과 override 키워드를 사용한 예시
     class Knight : Player
     {
-
+        // sealed 를 붙이면 Knight 까지만 Move 함수를 상속받아서 사용이 가능합니다.
+        // 즉, Knight 를 상속받은 경우 더이상 Move 함수의 사용이 불가능하게 됩니다.
+        public sealed override void Move()
+        {
+            Console.WriteLine("Knight 이동");
+        }
     }
 
     class Mage : Player
     {
         public int mp;
+
+        public override void Move()
+        {
+            Console.WriteLine("Mage 이동");
+        }
+    }
+
+    class SuperKnight : Knight
+    {
+        // 아래처럼 위에서 sealed 를 Move 함수에 붙여놓을 경우 그 아래의 자식에서는 사용이 불가능합니다.
+        /*public override void Move()
+        {
+            Console.WriteLine("SuperKnight 이동");
+        }*/
     }
 
     internal class OOP01
@@ -43,6 +69,8 @@ namespace CSharp
         // "as" 키워드 사용한 형변환
         static void EnterGame(Player player)
         {
+            player.Move();
+
             // "as" 사용시 이렇게 리턴 값을 캐스팅할 타입까지 지정 가능, 실패시 null
             Mage mage = (player as Mage);
             if (mage != null)
@@ -55,18 +83,6 @@ namespace CSharp
         {
             Knight knight = new Knight();
             Mage mage = new Mage();
-
-            /*
-                        // Mage -> 타입 Player 타입 변환 가능
-                        // Player 타입 -> Mage 타입 변환 불가능
-                        Player magePlayer = mage;
-                        // 하지만 (Mage) 를 사용해서 직접 명시해주면 형변환은 가능
-                        // 다만, 아래 방식은 강제로 형변환 한 것이기 때문에 문제가 생길 수 있습니다.
-                        Mage mage2 = (Mage)magePlayer;
-
-                        // 즉, 자식에서 부모로 가는 것은 문제가 없습니다.
-                        // 하지만, 부모에서 자식으로 가는 것은 문제가 생길 수도 있고 안 생길 수도 있습니다.(Case by Case)
-            */
 
             EnterGame(knight);
             EnterGame(mage);
