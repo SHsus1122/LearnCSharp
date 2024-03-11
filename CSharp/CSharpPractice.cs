@@ -9,161 +9,36 @@ namespace CSharp
 {
     class CSharpPractice
     {
-        // 배열 연습 문제
-        // 배열은 0 ~ 100 까지의 숫자를 가짐, 빈 배열은 0 을 리턴
-        static int GetHighestScore(int[] scores)
-        {
-            /*int highestNum = scores[0];
-            for (int i = 1; i < scores.Length; i++)
-            {
-                if (highestNum < scores[i])
-                    highestNum = scores[i];
-            }
-            return highestNum;*/
-            int maxValue = 0;
-            foreach (int score in scores)
-            {
-                if (score > maxValue)
-                    maxValue = score;
-            }
-            return maxValue;
-        }
-
-        static int GetAverageScore(int[] scores)
-        {
-            /*int result = 0;
-            foreach (int score in scores)
-                result += score;
-            return result / scores.Length;*/
-            // 배열이 0일 경우 0으로 나눈다는 것은 말이 안되기에 바로 0을 리턴
-            if (scores.Length == 0) return 0;
-
-            int sum = 0;
-            foreach (int score in scores)
-            {
-                sum += score;
-            }
-
-            return sum / scores.Length;
-        }
-
-        static int GetIndexOf(int[] scores, int value)
-        {
-            /*for (int i = 0; i < scores.Length; i++)
-                if (scores[i] == value)
-                    return i;
-            return -1;*/
-            for (int i = 0; i < scores.Length; i++)
-            {
-                if (scores[i] == value)
-                    return i;
-            }
-            return -1;
-        }
-
-        // 정렬
-        static void Sort(int[] scores)
-        {
-            /*int temp = 0;
-            for (int i = 0; i < scores.Length; i++)
-            {
-                if (i + 1 < scores.Length && scores[i] > scores[i + 1])
-                {
-                    temp = scores[i];
-                    scores[i] = scores[i + 1];
-                    scores[i + 1] = temp;
-                    for (int j = i; 0 < j; j--)
-                    {
-                        if (scores[j] < scores[j - 1])
-                        {
-                            temp = scores[j];
-                            scores[j] = scores[j - 1];
-                            scores[j - 1] = temp;
-                        }
-                    }
-                }
-            }*/
-            for (int i = 0; i < scores.Length; i++)
-            {
-                int minIndex = i;
-                for (int j = i; j < scores.Length; j++)
-                {
-                    if (scores[j] < scores[minIndex])
-                    {
-                        minIndex = j;
-                    }
-                }
-                int temp = scores[i];
-                scores[i] = scores[minIndex];
-                scores[minIndex] = temp;
-            }
-        }
-
-        // 2차원 배열을 활용해서 맵을 만들어서 출력해보기
-        class Map
-        {
-            int[,] tiles = {
-                { 1, 1, 1, 1, 1 },
-                { 1, 0, 0, 0, 1 },
-                { 1, 0, 0, 0, 1 },
-                { 1, 0, 0, 0, 1 },
-                { 1, 1, 1, 1, 1 }
-        };
-
-            // 맵을 화면에 출력해주는 함수입니다.
-            public void Render()
-            {
-                {
-                    // ForegroundColor : 출력문 글씨 색상 변경 함수입니다.
-                    // 출력이 다 끝나고 나면 색상을 원래대로 되돌리기 위해 기존의 색상을 저장하고 시작합니다.
-                    var defaultColor = Console.ForegroundColor;
-
-                    // 1차원 배열 사이즈
-                    for (int y = 0; y < tiles.GetLength(1); y++)
-                    {
-                        // 2차원 배열 사이즈
-                        for (int x = 0; x < tiles.GetLength(0); x++)
-                        {
-                            if (tiles[y, x] == 1)
-                                Console.ForegroundColor = ConsoleColor.Red;
-                            else
-                                Console.ForegroundColor = ConsoleColor.Green;
-
-                            Console.Write('\u25cf');
-                        }
-                        Console.WriteLine();
-                    }
-                    // 위에서 색 변경 및 출력이 다 끝났기 때문에 원래 색으로 되돌립니다.
-                    Console.ForegroundColor = defaultColor;
-                }
-            }
-        }
-
         static void Main(string[] args)
         {
-            int[] scores = new int[] { 10, 70, 40, 20, 50, 60, 35 };
+            // List, 이는 배열과 함께 가장 많이 사용되는 자료구조 중 하나입니다.
+            // 배열과는 다르게 동적으로 크기가 조절 가능하면서 동시에 index 를 사용해 요소에 접근이 가능합니다.
+            // List 또한, 마찬가지로 클래스로 참조 타입 입니다.
 
-            // 다차원 배열 선언, 초기화
-            // [2, 3] -> 2 : 2차원 크기, 3 : 1차원 크기
-            // [0, 0][0, 1][0, 2] [1, 0][1, 1][1, 2]  <- 이러한 형태
-            int[,] arr = new int[2, 3];
-            arr[0, 0] = 1;
-            arr[1, 0] = 2;
+            // 빈 List 선언
+            List<int> list = new List<int>();
 
-            // 다차원 배열 선언 및 초기화 1
-            int[,] arr2 = new int[2, 3] { { 1, 2, 3 }, { 1, 2, 3, } };
+            for (int i = 0; i < 5; i++)
+                list.Add(i);    // List 에 추가
 
-            // 다차원 배열 선언 및 초기화 2
-            int[,] arr3 = { { 1, 2, 3 }, { 1, 2, 3, } };
+            // 삽입 삭제
+            list.Insert(2, 999);
 
-            Map map = new Map();
-            map.Render();
+            // (값으로 접근) Remove 의 경우 숫자 3 이 여러개일 경우 처음 것만 삭제하고 끝납니다. 반환값은 bool
+            bool success = list.Remove(3);
 
-            // 배열 안의 배열을 만들기
-            int[][] testMap = new int[3][];
-            testMap[0] = new int[3];
-            testMap[1] = new int[6];
-            testMap[2] = new int[2];
+            // (index로 접근)
+            list.RemoveAt(0);
+
+            // 모든 값 초기화
+            //list.Clear();
+
+            // list.Count -> 리스트 사이즈
+            for (int i = 0; i < list.Count; i++)
+                Console.WriteLine(list[i]); // index 로 접근
+
+            foreach (int num in list)
+                Console.WriteLine(num); 
         }
     }
 }
