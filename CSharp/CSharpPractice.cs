@@ -10,51 +10,55 @@ namespace CSharp
 {
     class CSharpPractice
     {
+        /*
+         * 제네릭에 조건 추가하는 방법
+         *  1. T 가 반드시 값 형식임을 명시
+         *    class MyList<T> where T : struct
+         *  2. T 가 반드시 참조 형식임을 명시
+         *    class MyList<T> where T : class
+         *  3. T 가 반드시 어떠한 인자도 받지 않는 기본 생성자가 존재 해야함을 명시
+         *    class MyList<T> where T : new()
+         *  4. T 는 반드시 몬스터 혹은 몬스터를 상속받은 클래스여야 함을 명시
+         *    class MyList<T> where T : Monsters
+         */
+
+        // Generic, 일반화 형식 사용
+        // 아래처럼 "<>" 제네릭 안에 T 라는 이름으로 템플릿 혹은 타입의 약자로 많이 사용합니다.
+        // 즉, T 는 일반적으로 많이 사용한다는 거지 무엇을 쓸지는 자유입니다.
+        class MyList<T>
+        {
+            T[] arr = new T[10];
+
+            public T GetItem(int i)
+            {
+                return arr[i];
+            }
+        }
+
         class Monsters
         {
-            public int id;
-            public Monsters(int id) { this.id = id; }
+
+        }
+
+        // static 을 사용한 경우에도 이렇게 제네릭을 사용할 수 있습니다.
+        static void Test<T>(T input)
+        {
 
         }
 
         static void Main(string[] args)
         {
-            // Dictionary
-            // 만약 몬스터가 있다고 했을 때 리스트로 접근한다고 가정합니다.
-            // 그런데 이 단위가 100만 마리 이런식으로 범위가 너무 커지면 리스트는 너무 느리다는 점이 있습니다.
-            // 그래서 이를 보다 쉽게 찾기 위해서 Key 값으로 접근하는 방법이 있습니다.
-            // Key 값으로 탐색해서 Value 를 가져옵니다.
+            // Generic 활용법
+            // 아래 처럼 <T> 안에 int, float, Monsters 등 어떠한 것을 넣어도 치환되어서 정상 작동 합니다.
+            MyList<int> myIntList = new MyList<int>();
+            int item = myIntList.GetItem(0);
 
-            // Dictionary 는 Hashtable 이라는 기법을 사용합니다.
-            // 예로 아주 큰 박스가 하나 있고 이 안에 공이 10000개가 들어가 있으며 이 공에 숫자가 기입되어있다고 합니다.
-            // 이곳에서 원하는 숫자가 쓰여진 공을 찾는다고 가정합니다. 그러면 하나씩 찾아야 합니다.
-            // 하지만, 이 Hashtable 의 경우 박스 여러개를 쪼개 놓는다고 생각해봅니다.
-            // 그러면 [1~10] [11~20] ... [9990~10000] 이런식으로 10000만개를 조금 더 쪼개서 나눠 담습니다.
-            // 이렇게 하면 이제 특정 번호에 해당하는 공(데이터)을 찾는다고 할 때, 보다 빠르게 찾는 것이 가능해집니다.
-            // 다만, 이 방법은 이런식으로 박스를 많이 준비하게 되면 그만큼 메모리 소비량이 늘어나는 단점이 있습니다.
-            // 그래서 메모리는 더 사용하지만 대신 속도에 있어서 이점을 가지는 형태가 됩니다.
+            MyList<short> myShortList = new MyList<short>();
+            MyList<float> myFloatList = new MyList<float>();
+            MyList<Monsters> myMonsterList = new MyList<Monsters>();
 
-            // 다만, 아래처럼 사용할 떄 Value 를 통해서 Key 값을 가져오는 거꾸로 하는 방법은 불가능합니다.
-            // Dictionary 자료구조 선언
-            Dictionary<int, Monsters> dic = new Dictionary<int, Monsters>();
-
-            for (int i = 0; i < 10000; i++)
-            {
-                dic.Add(i, new Monsters(i));
-                //dic[5] = new Monsters(5);
-            }
-
-            // 탐색해서 가져오기
-            Monsters mon = dic[5000];
-
-            // dic[5000] 방식으로 접근하면 없을 때 에러를 발생합니다.
-            // 하지만, 아래처럼 TryGetValue 를 사용하면 에러를 방지할 수 있습니다.(반환값 bool)
-            Monsters mons;
-            bool found = dic.TryGetValue(20000, out mon);
-
-            // 삭제 및 초기화
-            dic.Remove(7777);   // 인덱스로 접근해서 삭제
-            dic.Clear();
+            Test<int>(3);
+            Test<float>(5.5f);
         }
     }
 }
