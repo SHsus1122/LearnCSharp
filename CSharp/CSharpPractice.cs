@@ -8,41 +8,65 @@ namespace CSharp
 {
     class CSharpPractice
     {
-        static void Main(string[] args)
+        // 배열 연습 문제
+        // 배열은 0 ~ 100 까지의 숫자를 가짐, 빈 배열은 0 을 리턴
+        static int GetHighestScore(int[] scores)
         {
-            // 자료구조
-            // 배열, Array
-            /*
-                이는 동일한 데이터 형식의 여러 요소를 저장하는 데이터 구조(묶음) 입니다.
-                배열은 메모리에 연속적으로 할당되며, 각 요소에는 인덱스를 사용해 접근합니다.
-                고정된 크기를 가지기에 한 번 설정되면 배열의 사이즈를 변경할 수 없습니다.
-             */
+            int highestNum = scores[0];
+            for (int i = 1; i < scores.Length; i++)
+            {
+                if (highestNum < scores[i])
+                    highestNum = scores[i];
+            }
+            return highestNum;
+        }
 
-            //int[] scores = new int[5];   // int 타입, 5의 고정된 사이즈 배열, 빈 배열 선언
+        static int GetAverageScore(int[] scores)
+        {
+            int result = 0;
+            foreach (int score in scores)
+                result += score;
+            return result / scores.Length;
+        }
 
-            // 0 1 2 3 4
-            //scores[0] = 10;
-            //scores[1] = 20;
-            //scores[2] = 30;
-            //scores[3] = 40;
-            //scores[4] = 50;
+        static int GetIndexOf(int[] scores, int value)
+        {
+            for (int i = 0; i < scores.Length; i++)
+                if (scores[i] == value)
+                    return i;
+            return -1;
+        }
 
-            // new int[5] 이 안에 5 사이즈를 지정 안해도 무방
-            // 또한 아래의 방식은 값의 복사가 아닌 참조 타입입니다
-            int[] scores = new int[] { 10, 20, 30, 40, 50 };   // 배열 선언과 함께 초기화
-            int[] scores2 = { 10, 20, 30, 40, 50 };            // 이렇게 선언도 가능합니다
-
-            int[] scores3 = scores; // 참조타입이기 때문에 이렇게 대입이 가능합니다.
-            scores3[0] = 5555;
-
-            // 일반 for 문
+        static void Sort(int[] scores)
+        {
+            int temp = 0;
             for (int i = 0; i < scores.Length; i++)
             {
-                Console.WriteLine(scores[i]);
+                if (i + 1 < scores.Length && scores[i] > scores[i + 1])
+                {
+                    temp = scores[i];
+                    scores[i] = scores[i + 1];
+                    scores[i + 1] = temp;
+                    for (int j = i; 0 < j; j--)
+                    {
+                        if (scores[j] < scores[j - 1])
+                        {
+                            temp = scores[j];
+                            scores[j] = scores[j - 1];
+                            scores[j - 1] = temp;
+                        }
+                    }
+                }
             }
+        }
 
-            // foreach 문
-            // scores 안의 값들을 하나씩 뽑아서 score 에 대입
+        static void Main(string[] args)
+        {
+            int[] scores = new int[] { 100, 70, 40, 20, 50, 60, 35 };
+            Console.WriteLine(GetHighestScore(scores));
+            Console.WriteLine(GetAverageScore(scores));
+            Console.WriteLine(GetIndexOf(scores, 50));
+            Sort(scores);
             foreach (int score in scores)
             {
                 Console.WriteLine(score);
