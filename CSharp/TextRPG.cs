@@ -3,7 +3,7 @@
 namespace CSharp
 {
 	class TextRPG { 
-		static void Main(string[] args)
+		static void Main2(string[] args)
 		{
 			// 게임 시작을 위한 새로운 게임 객체(인스턴스) 생성
 			Game game = new Game();
