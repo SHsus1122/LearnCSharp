@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -98,17 +99,71 @@ namespace CSharp
             }
         }
 
+        // 2차원 배열을 활용해서 맵을 만들어서 출력해보기
+        class Map
+        {
+            int[,] tiles = {
+                { 1, 1, 1, 1, 1 },
+                { 1, 0, 0, 0, 1 },
+                { 1, 0, 0, 0, 1 },
+                { 1, 0, 0, 0, 1 },
+                { 1, 1, 1, 1, 1 }
+        };
+
+            // 맵을 화면에 출력해주는 함수입니다.
+            public void Render()
+            {
+                {
+                    // ForegroundColor : 출력문 글씨 색상 변경 함수입니다.
+                    // 출력이 다 끝나고 나면 색상을 원래대로 되돌리기 위해 기존의 색상을 저장하고 시작합니다.
+                    var defaultColor = Console.ForegroundColor;
+
+                    // 1차원 배열 사이즈
+                    for (int y = 0; y < tiles.GetLength(1); y++)
+                    {
+                        // 2차원 배열 사이즈
+                        for (int x = 0; x < tiles.GetLength(0); x++)
+                        {
+                            if (tiles[y, x] == 1)
+                                Console.ForegroundColor = ConsoleColor.Red;
+                            else
+                                Console.ForegroundColor = ConsoleColor.Green;
+
+                            Console.Write('\u25cf');
+                        }
+                        Console.WriteLine();
+                    }
+                    // 위에서 색 변경 및 출력이 다 끝났기 때문에 원래 색으로 되돌립니다.
+                    Console.ForegroundColor = defaultColor;
+                }
+            }
+        }
+
         static void Main(string[] args)
         {
             int[] scores = new int[] { 10, 70, 40, 20, 50, 60, 35 };
-            Console.WriteLine(GetHighestScore(scores));
-            Console.WriteLine(GetAverageScore(scores));
-            Console.WriteLine(GetIndexOf(scores, 35));
-            Sort(scores);
-            foreach (int score in scores)
-            {
-                Console.WriteLine(score);
-            }
+
+            // 다차원 배열 선언, 초기화
+            // [2, 3] -> 2 : 2차원 크기, 3 : 1차원 크기
+            // [0, 0][0, 1][0, 2] [1, 0][1, 1][1, 2]  <- 이러한 형태
+            int[,] arr = new int[2, 3];
+            arr[0, 0] = 1;
+            arr[1, 0] = 2;
+
+            // 다차원 배열 선언 및 초기화 1
+            int[,] arr2 = new int[2, 3] { { 1, 2, 3 }, { 1, 2, 3, } };
+
+            // 다차원 배열 선언 및 초기화 2
+            int[,] arr3 = { { 1, 2, 3 }, { 1, 2, 3, } };
+
+            Map map = new Map();
+            map.Render();
+
+            // 배열 안의 배열을 만들기
+            int[][] testMap = new int[3][];
+            testMap[0] = new int[3];
+            testMap[1] = new int[6];
+            testMap[2] = new int[2];
         }
     }
 }
