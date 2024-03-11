@@ -10,55 +10,63 @@ namespace CSharp
 {
     class CSharpPractice
     {
-        /*
-         * 제네릭에 조건 추가하는 방법
-         *  1. T 가 반드시 값 형식임을 명시
-         *    class MyList<T> where T : struct
-         *  2. T 가 반드시 참조 형식임을 명시
-         *    class MyList<T> where T : class
-         *  3. T 가 반드시 어떠한 인자도 받지 않는 기본 생성자가 존재 해야함을 명시
-         *    class MyList<T> where T : new()
-         *  4. T 는 반드시 몬스터 혹은 몬스터를 상속받은 클래스여야 함을 명시
-         *    class MyList<T> where T : Monsters
-         */
-
-        // Generic, 일반화 형식 사용
-        // 아래처럼 "<>" 제네릭 안에 T 라는 이름으로 템플릿 혹은 타입의 약자로 많이 사용합니다.
-        // 즉, T 는 일반적으로 많이 사용한다는 거지 무엇을 쓸지는 자유입니다.
-        class MyList<T>
+        // 추상 클래스, abstract
+        abstract class Monsters
         {
-            T[] arr = new T[10];
+            public abstract void Shout();
+        }
 
-            public T GetItem(int i)
+        // 인터페이스 사용
+        interface IFlyable
+        {
+            // 이 IFlyable 를 가진 인터페이스 에서는 Fly 라는 함수(기능)을 반드시 구현해야 합니다.
+            // 하지만 abstract 를 사용한 것과 달리 어떠한 형태로 구현할지는 강제하지 않습니다.
+            void Fly();
+        }
+
+        class Orc : Monsters
+        {
+            public override void Shout()
             {
-                return arr[i];
+                Console.WriteLine("록타르 오가르!");
             }
         }
 
-        class Monsters
+        class Skeletons : Monsters
         {
-
+            public override void Shout()
+            {
+                Console.WriteLine("꾸에에에엑!");
+            }
         }
 
-        // static 을 사용한 경우에도 이렇게 제네릭을 사용할 수 있습니다.
-        static void Test<T>(T input)
+        // Fly 기능을 반드시(기본적으로) 내포하고 있는 FlyableOrc 클래스
+        class FlyableOrc : Orc, IFlyable
         {
+            public void Fly()
+            {
 
+            }
+        }
+
+        static void DoFly(IFlyable flyable)
+        {
+            // IFlyable 를 내포하고 있는 녀석은 DoFly 의 호출이 가능합니다 !
+
+            // 또한 이렇게 IFlyable 이 Fly 변수를 가지고 있기 때문에 이렇게 호출도 가능합니다 !
+            flyable.Fly();
         }
 
         static void Main(string[] args)
         {
-            // Generic 활용법
-            // 아래 처럼 <T> 안에 int, float, Monsters 등 어떠한 것을 넣어도 치환되어서 정상 작동 합니다.
-            MyList<int> myIntList = new MyList<int>();
-            int item = myIntList.GetItem(0);
+            // 인터페이스 변수인 flyable 변수에 FlyableOrc 를 저장하는 것도 가능합니다.
+            // 역으로 하는 행우지만, 이런것이 인터페이스를 사용했을 때 가능합니다.
+            IFlyable flyable = new FlyableOrc();
+            DoFly(flyable);     // 인자로 전달이 가능함 !! 이런식으로 사용이 가능합니다.
 
-            MyList<short> myShortList = new MyList<short>();
-            MyList<float> myFloatList = new MyList<float>();
-            MyList<Monsters> myMonsterList = new MyList<Monsters>();
-
-            Test<int>(3);
-            Test<float>(5.5f);
+            // 당연히 이렇게 오크 자체를(FlyableOrc) 사용해서도 가능합니다. 
+            FlyableOrc orc = new FlyableOrc();
+            DoFly(orc);
         }
     }
 }
