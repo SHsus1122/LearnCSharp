@@ -37,9 +37,14 @@ namespace CSharp
             return 0;
         }
 
+        static void OnInputTest()
+        {
+            Console.WriteLine("\nInput Received!");
+        }
+
         static void Main(string[] args)
         {
-            // 가장 간단한 사용법
+            /*// 가장 간단한 사용법
             // ButtonPressed(TestDelegate);
 
             // 원래는 내부적으로는 아래의 방식으로 동작합니다.
@@ -61,6 +66,25 @@ namespace CSharp
             // += 를 사용해서 이렇게 Delegate 객체에 일어나야 할 일들을 쭉 체이닝을 해서 뒤에 덧붙일 수 있습니다.
             clicked += TestDelegate2;
             ButtonPressed(clicked);
+
+            clicked();*/
+
+            // InputManager 객체 생성
+            InputManager inputManager = new InputManager();
+
+            // 구독 신청을 원하는 함수 입력
+            inputManager.InputKey += OnInputTest;
+
+            // 구독 취소
+            //inputManager.InputKey -= OnInputTest;
+
+            while (true)
+            {
+                inputManager.Update();
+            }
+            
+            // 이벤트는 델리게이트와 달리 이렇게 직접 호출은 불가능
+            //inputManager.InputKey();
         }
     }
 }
