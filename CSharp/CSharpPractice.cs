@@ -8,83 +8,107 @@ using System.Threading.Tasks;
 
 namespace CSharp
 {
+    enum ItemType
+    {
+        Weapon,
+        Armor,
+        Amulet,
+        Ring
+    }
+
+    // 등급 레벨
+    enum Rarity
+    {
+        Normal,
+        Uncommon,
+        Rare
+    }
+
+    class Item
+    {
+        public ItemType ItemType;
+        public Rarity Rarity;
+    }
+
     class CSharpPractice
     {
-        // 대리자, Delegate
-        // 우리가 어떤 업체의 사장님에게 전화하려면 이 사장님의 비서에게 연락을 하게 됩니다.
-        // 이를 위해서 연락처/용건 이 필요하며 거꾸로 연락을 달라고 요청을 하게 됩니다.(콜백)
+        // Lambda : 일회용 함수를 만드는 데 사용하는 문법입니다.
+        static List<Item> _items = new List<Item>();
 
-        // delegate 가 붙었으면 함수 자체를 인자로 넘겨주는 형식의 함수
-        // 반환 : int , 입력 : void
-        // OnClicked 이 delegate 형식의 이름이라고 보면 됩니다.
-        delegate int OnClicked();
+        // 좀 더 중의적인 이름인 MyFunc
+        // 이 Delegate 하나로 이제 입력 형식(T) 하나와 반환 형식(Return)이 하나가 있는 타입의 델리 게이트의 경우
+        // 이 MyFunc Delegate 하나로 모두 사용이 가능해집니다.
+        delegate bool Func<T, Return>(T item);
 
-        static void ButtonPressed(OnClicked clickedFunction)
+        // 위 함수와 달리 맨 처음에는 delegate bool ItemSelector(Item item); 이 함수 였습니다.
+        // 즉, ItemSelector 이름에 맞게 해당 용도로만 사용하는 형태의 델리게이트였습니다.
+
+        // 그런데 위의 MyFunc의 경우 인자를 하나 밖에 못 받는 문제가 있습니다.
+        // 이런 경우 이제 아래처럼 인자 개수만큼 준비해서 함수들을 사전에 작성해두면 됩니다.
+
+        // 반환 형식은 있고 입력 형식은 없는 경우 
+        delegate bool MyFunc<Return>();
+        // 입력은 두 개를 받고 반환은 하나를 받는 경우
+        delegate bool MyFunc<T1, T2, Return>(T1 t1, T2 t2);
+
+        // Weapon 검증 및 반환 함수
+        /*static bool IsWeapon(Item item)
         {
-            // 함수를 호출();
-            clickedFunction();
-        }
+            return item.ItemType == ItemType.Weapon;
+        }*/
 
-        static int TestDelegate()
+        // 직접 만든 MyFunc Delegate 를 활용한 FindItem 함수
+        /*static Item FindItem(MyFunc<Item, bool> selector)
         {
-            Console.WriteLine("Hello Delegate");
-            return 0;
-        }
+            foreach (Item item in _items)
+            {
+                if (selector(item))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }*/
 
-        static int TestDelegate2()
+        // 이미 C#에 만들어져 있는 Func 를 활용한 FindItem 함수
+        static Item FindItem(Func<Item, bool> selector)
         {
-            Console.WriteLine("Hello Delegate 2");
-            return 0;
-        }
-
-        static void OnInputTest()
-        {
-            Console.WriteLine("\nInput Received!");
+            foreach (Item item in _items)
+            {
+                if (selector(item))
+                {
+                    return item;
+                }
+            }
+            return null;
         }
 
         static void Main(string[] args)
         {
-            /*// 가장 간단한 사용법
-            // ButtonPressed(TestDelegate);
+            _items.Add(new Item() { ItemType = ItemType.Weapon, Rarity = Rarity.Normal });
+            _items.Add(new Item() { ItemType = ItemType.Armor, Rarity = Rarity.Uncommon });
+            _items.Add(new Item() { ItemType = ItemType.Ring, Rarity = Rarity.Rare });
 
-            // 원래는 내부적으로는 아래의 방식으로 동작합니다.
-            // 또한, 이는 C++ 의 함수 포인터와 굉장히 비슷합니다.
-            //  1. delegate 형식으로 OnClicked 타입의 새로운 객체를 만듭니다.
-            //  2. 이 clicked 에는 호출 할 콜백 함수인 TestDelegate 를 인자로 전달합니다.
-            //  3. 이후 clicked(); 이런식으로 바로 여기서 호출하는 것도 가능하며,
-            //  4. 맨 아래처럼 ButtonPressed(clicked); 이런식으로 넘겨주는 것도 가능합니다.
-            OnClicked clicked = new OnClicked(TestDelegate);
-            clicked();
+            // Anonymous Function : 무명 함수 / 익명 함수 (초기의 람다 방식)
+            //Item item = FindItem(delegate (Item item) { return item.ItemType == ItemType.Weapon; });
 
-            ButtonPressed(clicked);
+            // Lambda 함수를 사용하면 이렇게 일회성 함수의 작성이 가능합니다.(일회성 함수 제작)
+            //Item item = FindItem((Item item) => { return item.ItemType == ItemType.Weapon; });
 
-            Console.WriteLine();
+            // 코드를 더 줄이면 아래처럼 작성해서 사용도 가능합니다.
+            Func<Item, bool> selector = (Item item) => { return item.ItemType == ItemType.Weapon; };
+            Item item = FindItem(selector);
 
-            // 위처럼 ButtonPressed(TestDelegate); 이렇게가 아닌 더 어렵게 하는 이유가 있습니다.
-            // 이는 Delegate 를 체이닝 하는 방법이 있기 때문입니다.
-            // 여기서 말하는 것은 이 Delegate 객체에 여러개의 함수를 넘기는 것을 말합니다.
-            // += 를 사용해서 이렇게 Delegate 객체에 일어나야 할 일들을 쭉 체이닝을 해서 뒤에 덧붙일 수 있습니다.
-            clicked += TestDelegate2;
-            ButtonPressed(clicked);
+            // 그리고 실제로 MyFunc 처럼 사용하는 경우가 이미 C# 에 Func 라는 함수로 존재합니다.
+            // 그런데, Func 함수를 보면 out 으로 TResult 가 있는 타입인데, 이는 void 형으로 return 하는 함수도 만들 수 있습니다.
+            // 이런 경우 Action 이라는 타입이 사용 가능합니다.
 
-            clicked();*/
+            // 결론적으로 Delegate를 직접 선언하지 않아도 이미 만들어진 함수가 존재합니다.
+            // -> 반환 타입이 있을 경우 Func
+            // -> 반환 타입이 없을 경우 Action 을 사용하면 됩니다.
 
-            // InputManager 객체 생성
-            InputManager inputManager = new InputManager();
-
-            // 구독 신청을 원하는 함수 입력
-            inputManager.InputKey += OnInputTest;
-
-            // 구독 취소
-            //inputManager.InputKey -= OnInputTest;
-
-            while (true)
-            {
-                inputManager.Update();
-            }
-            
-            // 이벤트는 델리게이트와 달리 이렇게 직접 호출은 불가능
-            //inputManager.InputKey();
+            // 그래서 실제로 사용할 때는 아래처럼 사용하면 됩니다.
+            Item item2 = FindItem((Item item) => { return item.ItemType == ItemType.Weapon; });
         }
     }
 }
