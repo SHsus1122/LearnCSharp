@@ -9,54 +9,53 @@ namespace CSharp
 {
     class CSharpPractice2
     {
-        class Important : System.Attribute
+        static int Find()
         {
-            string message;
-
-            public Important(string message) { this.message = message; }
+            // 이처럼 무언가를 찾는다고 가정했을 때 일반적으로 못 찾으면 아래처럼
+            // 0 이나 -1 을 반환하는 경우가 있습니다. 그런데 이런 경우에 Null 을 쓰는 것이 좋습니다.
+            // 왜냐하면 0 이라는 값도 실제로 사용할 수도 있기 때문입니다.
+            // 여기서 C# 에서 Nullable 이라는 타입을 지원해줍니다.
+            return 0;
         }
 
         class Mob
         {
-            // hp 라는 정보가 만약 중요한 정보라고 가정합니다.
-            // 하지만, 컴퓨터 입장에서 보면 이는 컴파일도 안하고 그냥 지워버리는 정보입니다.
-            // 그런데 이런 경우 attribute 를 사용하면 실제로 런타임에서도 참고할 수 있는 힌트를 남길 수 있습니다.
-            [Important("Very Important !!")]    // Attribute 사용
-
-            public int hp;
-            protected int attack;
-            private float speed;
-
-            void Attack() { }
+            public int Id { get; set; }
         }
 
         static void Main(string[] args)
         {
-            // Reflection 사용 예
-            Mob mob = new Mob();
+            // NUll 또한 클래스입니다.
+            // 아래처럼 int 뒤 ? 를 붙이면 이제 number 는 Null 도 될 수 있다는 의미가 됩니다.
+            int? number = null;
 
-            // 이 GetType 이라는 것이 만들지 않았는데 사용 가능한 것을 볼 수 있습니다.
-            // 이는 C# 에서 만드는 모든 객체들은 다 Object 객체에서 파생되어서 나왔기 때문입니다.
-            // 그래서 이 말고도 Equals, toString 등 다양한 함수가 존재하는 것을 볼 수 ㅇㅆ습니다.
-            // 그래서 이렇게 Type 도 대체가 가능합니다.
-            Type type = mob.GetType();
+            //number = 3;
 
-            var fields = type.GetFields(System.Reflection.BindingFlags.Public
-                | System.Reflection.BindingFlags.NonPublic
-                | System.Reflection.BindingFlags.Static
-                | System.Reflection.BindingFlags.Instance);
+            // number 안의 값이 null 이 아니면 값을 가져와서 b에 넣어주고
+            // 아니라면 초기값으로 지정한 0 을 넣어준다는 의미입니다.(삼항 연산자와 유사한 사용방식)
+            int b = number ?? 0;
 
-            foreach ( FieldInfo field in fields)
+            if (number != null)
             {
-                string access = "protected";
-                if (field.IsPublic) access = "public";
-
-                else if(field.IsPrivate) access = "private";
-
-                var attributes = field.GetCustomAttributes();
-
-                Console.WriteLine($"{access} {field.FieldType.Name} {field.Name}");
+                int a = number.Value;
+                Console.WriteLine(a);
             }
+
+            if (number.HasValue)
+            {
+                int a = number.Value;
+                Console.WriteLine(a);
+            }
+
+            Mob mob = null;
+            if (mob != null)
+            {
+                int monId = mob.Id;
+            }
+
+            // 이 코드의 의미는 mob 의 Id 를 가져와서 id 변수에 담을 것인데 만약 이 mob 이라는 변수가 null 이라면 null 을 넣는 다는 의미이며,
+            // 아닐 경우 정상적으로 mob 의 Id 를 담게 됩니다.
+            int? id = mob?.Id;
         }
     }
 }
