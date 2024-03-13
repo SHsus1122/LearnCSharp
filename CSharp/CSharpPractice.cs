@@ -83,7 +83,7 @@ namespace CSharp
             return null;
         }
 
-        static void Main(string[] args)
+        static void Main4(string[] args)
         {
             _items.Add(new Item() { ItemType = ItemType.Weapon, Rarity = Rarity.Normal });
             _items.Add(new Item() { ItemType = ItemType.Armor, Rarity = Rarity.Uncommon });
